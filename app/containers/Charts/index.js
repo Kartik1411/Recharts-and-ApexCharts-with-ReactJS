@@ -1,47 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AreaChartIndex from '../../components/AreaChart';
 import { data } from '../../fakeData/data';
 
 function Charts() {
+  const [areaSeries, setAreaSeries] = useState([{}]);
   const opacity = 0.5;
   const color = ['#eb7d34', '#888888', '#ea1212', '#555555', '#333333'];
-  let arr = Object.keys(data[0]).filter(key => key !== 'x');
-  arr = arr.map((dataKey, index) => ({
-    dataKey,
-    color: color[index],
-    opacity,
-  }));
 
-  // console.log(arr[0].dataKey);
-
-  const handleMouseEnter = event => {
-    for (let i = 0; i < arr.length; i += 1) {
-      if (arr[i].dataKey === event.value) {
-        console.log(event.value);
-        console.log(arr[i].opacity);
-        arr[i].opacity = 1;
-        console.log(arr[i].opacity);
-      }
-    }
+  const config = {
+    width: 1000,
+    height: 500,
   };
 
-  const handleMouseLeave = event => {
-    for (let i = 0; i < arr.length; i += 1) {
-      if (arr[i].dataKey === event.value) {
-        arr[i].opacity = 0.5;
+  useEffect(() => {
+    const arr = Object.keys(data[0]).filter(key => key !== 'time');
+    setAreaSeries(
+      arr.map((dataKey, index) => ({
+        dataKey,
+        color: color[index],
+        opacity,
+      })),
+    );
+  }, []);
+
+  const handleMouseEnter = useCallback(obj => {
+    const datakey = obj.value;
+    const tempSeries = areaSeries.map(object => {
+      if (datakey === object.dataKey) {
+        return { ...object, opacity: 0.8 };
       }
-    }
-  };
+      return object;
+    });
+    setAreaSeries(tempSeries);
+  });
+
+  const handleMouseLeave = useCallback(obj => {
+    const { datakey } = obj;
+    const tempSeries = areaSeries.map(object => {
+      if (datakey === object.key) {
+        return { ...object, opacity: 0.5 };
+      }
+      return object;
+    });
+    setAreaSeries(tempSeries);
+  });
 
   return (
-    <div>
-      <AreaChartIndex
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-        arr={arr}
-        data={data}
-      />
-    </div>
+    <AreaChartIndex
+      config={config}
+      handleMouseEnter={handleMouseEnter}
+      handleMouseLeave={handleMouseLeave}
+      arr={areaSeries}
+      data={data}
+    />
   );
 }
 

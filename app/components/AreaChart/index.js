@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import moment from 'moment';
 import {
   AreaChart,
   Area,
@@ -14,9 +15,15 @@ function AreaChartIndex(props) {
   return (
     <div>
       <AreaChart
-        width={1000}
-        height={500}
         data={props.data}
+        width={props.config.width}
+        height={props.config.height}
+        padding={{
+          top: 20,
+          right: 20,
+          left: 20,
+          bottom: 20,
+        }}
         margin={{
           top: 10,
           right: 30,
@@ -25,18 +32,19 @@ function AreaChartIndex(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="x" />
-        <YAxis />
-        <Tooltip
-          cursor={{ stroke: 'green', strokeWidth: 2 }}
-          position={{ x: 1000, y: 40 }}
+        <XAxis
+          dataKey="time"
+          tickFormatter={unixTime => moment(unixTime).format('MMM Do YY')}
+          label="Time"
         />
+        <YAxis label="Data" />
+        <Tooltip cursor={{ stroke: 'green', strokeWidth: 2 }} />
         {props.arr.map(({ dataKey, color, opacity }) => (
           <Area
             key={dataKey}
             type="monotone"
             dataKey={`${dataKey}`}
-            stackId="1"
+            // stackId="1"
             fillOpacity={opacity}
             stroke={color}
             fill={color}
