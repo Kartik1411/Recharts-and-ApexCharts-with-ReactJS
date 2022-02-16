@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import moment from 'moment';
+
 import {
   AreaChart,
   Area,
@@ -18,27 +18,27 @@ function AreaChartIndex(props) {
         data={props.data}
         width={props.config.width}
         height={props.config.height}
-        padding={{
-          top: 20,
-          right: 20,
-          left: 20,
-          bottom: 20,
-        }}
         margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0,
+          top: props.config.top,
+          right: props.config.right,
+          left: props.config.left,
+          bottom: props.config.bottom,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="time"
-          tickFormatter={unixTime => moment(unixTime).format('MMM Do YY')}
+          padding={{ left: props.arr.left, right: props.arr.right }}
+          tick
+          domain={['dataMin - 5', 'dataMax + 5']}
+          tickFormatter={props.config.tickFormatter}
           label="Time"
         />
         <YAxis label="Data" />
-        <Tooltip cursor={{ stroke: 'green', strokeWidth: 2 }} />
+        <Tooltip
+          cursor={{ stroke: 'green', strokeWidth: 2 }}
+          labelFormatter={props.config.labelFormatter}
+        />
         {props.arr.map(({ dataKey, color, opacity }) => (
           <Area
             key={dataKey}

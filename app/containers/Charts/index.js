@@ -1,5 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-param-reassign */
 import React, { useState, useEffect, useCallback } from 'react';
+import moment from 'moment';
 import AreaChartIndex from '../../components/AreaChart';
+import ZoomDemo from '../../components/AreaChart/ZoomDemo';
 import { data } from '../../fakeData/data';
 
 function Charts() {
@@ -10,6 +14,12 @@ function Charts() {
   const config = {
     width: 1000,
     height: 500,
+    top: 10,
+    right: 30,
+    left: 0,
+    bottom: 0,
+    tickFormatter: unixTime => moment(unixTime).format('MMM Do YY'),
+    labelFormatter: t => new Date(t).toLocaleString(),
   };
 
   useEffect(() => {
@@ -46,13 +56,16 @@ function Charts() {
   });
 
   return (
-    <AreaChartIndex
-      config={config}
-      handleMouseEnter={handleMouseEnter}
-      handleMouseLeave={handleMouseLeave}
-      arr={areaSeries}
-      data={data}
-    />
+    <div>
+      {/* <AreaChartIndex
+        config={config}
+        handleMouseEnter={handleMouseEnter}
+        handleMouseLeave={handleMouseLeave}
+        arr={areaSeries}
+        data={data}
+      /> */}
+      <ZoomDemo config={config} data={data} />
+    </div>
   );
 }
 
